@@ -27,7 +27,7 @@ public class Operatore {
     private String email;
 
     @NotNull
-    private String statoOperatore;
+    private Boolean statoOperatore;
 
     @OneToMany(mappedBy = "operatore")
     private List<Ticket> ticket;
@@ -67,11 +67,11 @@ public class Operatore {
         this.email = email;
     }
 
-    public String getStatoOperatore() {
+    public Boolean getStatoOperatore() {
         return statoOperatore;
     }
 
-    public void setStatoOperatore(String statoOperatore) {
+    public void setStatoOperatore(Boolean statoOperatore) {
         this.statoOperatore = statoOperatore;
     }
 
