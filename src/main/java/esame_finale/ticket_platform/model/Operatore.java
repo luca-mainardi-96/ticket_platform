@@ -26,6 +26,8 @@ public class Operatore {
 
     private String email;
 
+    private String percorsoImg;
+
     @NotNull
     private Boolean statoOperatore;
 
@@ -91,5 +93,12 @@ public class Operatore {
         this.ruoli = ruoli;
     }
 
+    public String getPercorsoImg() {
+        return percorsoImg;
+    }
+
+    public void setPercorsoImg(String percorsoImg) {
+        this.percorsoImg = percorsoImg;
+    }
     
 }

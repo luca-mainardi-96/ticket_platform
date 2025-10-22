@@ -11,20 +11,36 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfiguration {
 
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests()
-        .requestMatchers("").hasAuthority("")
-        .requestMatchers("").hasAnyAuthority("")
-        .requestMatchers("").hasAnyAuthority("")
-        .requestMatchers("").hasAnyAuthority("")
-        .requestMatchers("/**").permitAll()  
-                .and()
-            .csrf().disable()             
-            .formLogin().disable()        
-            .httpBasic().disable();     
+    // SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    //     http.authorizeHttpRequests()
+    //     .requestMatchers("").hasAuthority("")
+    //     .requestMatchers("").hasAnyAuthority("")
+    //     .requestMatchers("").hasAnyAuthority("")
+    //     .requestMatchers("").hasAnyAuthority("")
+    //     .requestMatchers("/**").permitAll()  
+    //             .and()
+    //         .csrf().disable()             
+    //         .formLogin().disable()        
+    //         .httpBasic().disable();     
+
+    //     return http.build();
+    // }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+            .authorizeHttpRequests(auth -> auth
+                .anyRequest().permitAll()   
+            )
+            .csrf(csrf -> csrf.disable())    
+            .formLogin(form -> form.disable())  
+            .httpBasic(basic -> basic.disable()); 
 
         return http.build();
     }
+
+
+
 
     @Bean
     DatabaseUserDetailsService userDetailsService(){

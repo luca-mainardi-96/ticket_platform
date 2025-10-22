@@ -11,8 +11,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
@@ -32,8 +32,8 @@ public class Ticket {
     @NotNull
     private String statoLavori;
 
-    @Max(value = 255)
-    private String note;
+    @OneToMany(mappedBy="ticket")
+    private List<Nota> note;
 
     @ManyToOne
     @JoinColumn(name = "operatore_id")
@@ -69,14 +69,6 @@ public class Ticket {
         this.statoLavori = statoLavori;
     }
 
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
-    }
-
     public Operatore getOperatore() {
         return operatore;
     }
@@ -99,6 +91,14 @@ public class Ticket {
 
     public void setCategorie(List<Categoria> categorie) {
         this.categorie = categorie;
+    }
+
+    public List<Nota> getNote() {
+        return note;
+    }
+
+    public void setNote(List<Nota> note) {
+        this.note = note;
     }
 
     

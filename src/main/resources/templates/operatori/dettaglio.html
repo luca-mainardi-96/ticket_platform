@@ -8,12 +8,13 @@
     </head>
     <body>
 
-        <nav th:replace="fragments :: navbar('Dettaglio')"></nav>
+        <nav th:replace="~{fragments/navbar :: navbar('Dettaglio')}"></nav>
 
         <div class="container">
             <div class="row">
-                <div class="col-8">
-                    <div th:replace="fragments :: card"></div>
+                <div class="col-8 py-4">
+                    <h3>Scheda operatore</h3>
+                    <div th:replace="~{fragments/card :: card}"></div>
                 </div>
             </div>
         </div>
