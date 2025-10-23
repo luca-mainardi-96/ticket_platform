@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import esame_finale.ticket_platform.model.Operatore;
+import esame_finale.ticket_platform.model.Ticket;
 import esame_finale.ticket_platform.repository.OperatoreRepository;
 import jakarta.validation.Valid;
 
@@ -35,16 +36,29 @@ public class OperatoreController {
     @GetMapping("/")
     public String show(Model model){
         List<Operatore> result = opRepo.findAll();
+        for(Operatore op : result){
+            if(!op.getTicket().isEmpty()){
+                op.setStatoOperatore(false);
+            }
+        }
         model.addAttribute("lista", result);
         return "operatori/operatori";
     }
 
     @GetMapping("/dettaglio/{id}")
     public String show(@PathVariable(name = "id") Integer id, Model model){
-        
+        List<Ticket> tickets = opRepo.findById(id).get().getTicket();
         Optional<Operatore> optOp = opRepo.findById(id);
+        
+        if(!tickets.isEmpty()){
+            optOp.get().setStatoOperatore(false);
+        } else {
+            optOp.get().setStatoOperatore(true);
+        }
+
         if(optOp.isPresent()){
             model.addAttribute("operatore", optOp.get());
+            model.addAttribute("listaTicket", tickets);
             model.addAttribute("empty", false);
         } else {
             model.addAttribute("empty", true);

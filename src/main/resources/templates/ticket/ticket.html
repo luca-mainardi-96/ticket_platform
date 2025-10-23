@@ -12,7 +12,70 @@
 
     <div class="container">
         <div class="row">
-            
+            <div class="col-7">
+                <ul>
+                    <li th:text="|Titolo: ${ticket.titolo}|"></li>
+                    <li th:text="|Operatore assegnato: ${ticket.operatore.username}|"></li>
+                    <li th:text="|Data Creazione: ${ticket.dataInizio}|"></li>
+                    <li>
+                        <form th:action="@{/ticket/{id}(id=${ticket.id})}" method="post" th:object="${ticket}">
+                            <select th:field="*{statoLavori}" id="">
+                                <option value="">Aggiorna stato del ticket</option>
+                                <option value="Da fare">Da fare</option>
+                                <option value="In corso">In corso</option>
+                                <option value="Completato">Completato</option>
+                            </select>
+                            <button type="submit" class="btn btn-primary text-light">Conferma modifica</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-5">
+                <ul>
+                    <li th:each="cat : ${categorie}" th:text="${cat.nome}"></li>
+                </ul>
+            </div>
+            <div class="col-12">
+                <div th:if="${note.size() > 0}">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Autore</th>
+                                <th>Data inserimento</th>
+                                <th>Visualizza testo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="nota : ${note}">
+                                <td th:text="${note.autore}"></td>
+                                <td th:text="${note.dataCreazione}"></td>
+                                <td>
+                                    <button class="btn btn-outline-secondary btn-sm"
+                                            type="button"
+                                            data-bs-toggle="collapse"
+                                            th:attr="data-bs-target='#noteRow__${ticket.id}'"
+                                            aria-expanded="false"
+                                            th:attrappend="aria-controls='noteRow__${ticket.id}'">
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="collapse" th:id="'noteRow__' + ${ticket.id}">
+                                <td colspan="4">
+                                    <div class="p-3 bg-light border rounded">
+                                        <label class="form-label fw-bold">Note del ticket</label>
+                                        <textarea class="form-control" rows="3"></textarea>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div th:unless="${note.size() > 0}">
+                    <div class="alert alert-primary" role="alert">
+                        Non ci sono note per questo ticket
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>   

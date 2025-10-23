@@ -12,8 +12,11 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 
 @Entity
 public class Ticket {
@@ -22,11 +25,13 @@ public class Ticket {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotNull
+    @NotNull(message="titolo obbligatorio")
+    @NotBlank(message="campo obbligatorio")
     private String titolo;
 
-    @Future
-    @NotNull
+    @FutureOrPresent(message="data precedente a oggi non valida")
+    @PastOrPresent(message="data successiva a oggi non valida")
+    @NotNull(message="seleziona una data d'inizio")
     private LocalDate dataInizio;
 
     @NotNull
@@ -37,12 +42,14 @@ public class Ticket {
 
     @ManyToOne
     @JoinColumn(name = "operatore_id")
+    @NotNull(message="seleziona un operatore")
     private Operatore operatore;
 
     @ManyToMany
     @JoinTable(name = "ticket_categorie", 
             joinColumns = @JoinColumn(name = "ticket_id"), 
             inverseJoinColumns = @JoinColumn(name = "categorie_id"))
+    @NotEmpty(message="seleziona almeno una categoria")
     private List<Categoria> categorie;
 
     public Integer getId() {

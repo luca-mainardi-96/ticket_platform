@@ -1,5 +1,7 @@
 package esame_finale.ticket_platform.model;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -7,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Nota {
@@ -21,6 +24,12 @@ public class Nota {
     @ManyToOne
     @JoinColumn(name="ticket_id")
     private Ticket ticket;
+
+    @NotNull
+    private String autore;
+
+    @NotNull
+    private LocalDate dataCreazione;
 
     public Integer getId() {
         return id;
@@ -45,5 +54,22 @@ public class Nota {
     public void setTicket(Ticket ticket) {
         this.ticket = ticket;
     }
+
+    public LocalDate getDataCreazione() {
+        return dataCreazione;
+    }
+
+    public void setDataCreazione(LocalDate dataCreazione) {
+        this.dataCreazione = dataCreazione;
+    }
+
+    public String getAutore() {
+        return autore;
+    }
+
+    public void setAutore(String autore) {
+        this.autore = autore;
+    }
+
 
 }

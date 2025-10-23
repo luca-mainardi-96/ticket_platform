@@ -15,7 +15,7 @@ import esame_finale.ticket_platform.repository.OperatoreRepository;
 import esame_finale.ticket_platform.repository.TicketRepository;
 
 @Controller
-@RequestMapping("/")
+@RequestMapping("/dashboard")
 public class DashboardController {
 
     @Autowired
@@ -24,7 +24,7 @@ public class DashboardController {
     @Autowired
     private OperatoreRepository opRepo;
     
-    @GetMapping("")
+    @GetMapping("/")
     public String filter(@RequestParam(name="keyword", required=false) String keyword, Model model){
         List<Ticket> result;
         List<Operatore> opList = opRepo.findAll();

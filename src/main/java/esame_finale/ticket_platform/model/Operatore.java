@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
@@ -18,7 +19,8 @@ public class Operatore {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotNull
+    @NotNull(message="username non può essere null")
+    @NotBlank(message="campo obbligatorio")
     private String username;
 
     @NotNull
@@ -28,7 +30,7 @@ public class Operatore {
 
     private String percorsoImg;
 
-    @NotNull
+    @NotNull(message="scegli uno stato")
     private Boolean statoOperatore;
 
     @OneToMany(mappedBy = "operatore")

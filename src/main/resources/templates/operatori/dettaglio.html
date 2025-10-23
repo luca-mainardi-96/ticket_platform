@@ -12,9 +12,38 @@
 
         <div class="container">
             <div class="row">
-                <div class="col-8 py-4">
-                    <h3>Scheda operatore</h3>
-                    <div th:replace="~{fragments/card :: card}"></div>
+                <div th:if="${!empty}">
+                    <div class="col-8 py-4">
+                        <h3>Scheda operatore</h3>
+                        <div th:replace="~{fragments/card :: card}"></div>
+                    </div>
+                </div>
+                <div th:if="${empty}">
+                    <div class="alert alert-primary" role="alert">
+                        Non ci sono operatori che corrispondono a questo id
+                    </div>
+                </div>
+                <div th:if="${listaTicket.size() > 0}">
+                    <div class="col-8 py-4">
+                        <h3>Lista ticket</h3>
+                        <ul class="list-group">
+                            <li class="list-group-item d-flex justify-content-between"
+                                th:each="tic : ${listaTicket}">
+                                <span th:text="${tic.titolo}"></span>
+                                <span th:text="${tic.statoLavori}"></span>
+                                <span>
+                                    <button class="btn btn-primary">
+                                        <a th:href="@{/}" class="text-light">Dettagli</a>
+                                    </button>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div th:if="${listaTicket.size() <= 0}">
+                    <div class="alert alert-primary" role="alert">
+                        Non ci sono ticket per questo operatore
+                    </div>
                 </div>
             </div>
         </div>

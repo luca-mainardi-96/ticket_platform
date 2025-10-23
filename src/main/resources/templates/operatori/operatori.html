@@ -52,7 +52,7 @@
                             <td th:text="${op.username}"></td>
                             <td>
                                 <span th:if="${op.statoOperatore}" class="badge bg-success">Disponibile</span>
-                                <span th:if="${!op.statoOperatore}" class="badge bg-danger">Occupato</span>
+                                <span th:if="${!op.statoOperatore}" class="badge bg-danger">Non disponibile</span>
                             </td>
                             <td>
                                 <button class="btn btn-outline-primary">
