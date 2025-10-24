@@ -21,6 +21,7 @@ public class DatabaseUserDetail implements UserDetails{
     private Set<GrantedAuthority> authorities;
 
     public DatabaseUserDetail(Operatore op){
+        this.id = op.getId();
         this.username = op.getUsername();
         this.password = op.getPassword();
         this.authorities = new HashSet<>();

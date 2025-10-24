@@ -19,6 +19,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @Configuration
 public class SecurityConfiguration {
 
+    @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests()
         .requestMatchers("/dashboard").hasAuthority("ADMIN")
@@ -49,24 +50,36 @@ public class SecurityConfiguration {
     }
 
     private AuthenticationSuccessHandler customSuccessHandler() {
-        return new AuthenticationSuccessHandler() {
-            @Override
-            public void onAuthenticationSuccess(HttpServletRequest request,
-                                                HttpServletResponse response,
-                                                Authentication authentication)
-                                                throws IOException {
+    return new AuthenticationSuccessHandler() {
+        @Override
+        public void onAuthenticationSuccess(HttpServletRequest request,
+                                            HttpServletResponse response,
+                                            Authentication authentication)
+                                            throws IOException {
 
-                String role = authentication.getAuthorities().iterator().next().getAuthority();
+            String role = authentication.getAuthorities().iterator().next().getAuthority();
+            System.out.println("[DEBUG] Ruolo autenticato: " + role);
+            System.out.println("[DEBUG] Authentication object: " + authentication);
 
-                if (role.equals("ADMIN")) {
-                    response.sendRedirect("/dashboard/");
-                } else if (role.equals("OPERATORE")) {
-                    DatabaseUserDetail currentUser = (DatabaseUserDetail)
-                        SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (role.equals("ADMIN")) {
+                System.out.println("[DEBUG] Redirect verso /dashboard/");
+                response.sendRedirect("/dashboard/");
+            } else if (role.equals("OPERATORE")) {
+                Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                System.out.println("[DEBUG] Principal type: " + principal.getClass().getName());
+                System.out.println("[DEBUG] Principal value: " + principal);
+
+                if (principal instanceof DatabaseUserDetail currentUser) {
                     Integer id = currentUser.getId();
+                    System.out.println("[DEBUG] ID Operatore: " + id);
                     response.sendRedirect("/operatore/dettaglio/" + id);
+                } else {
+                    System.out.println("[DEBUG] Principal non è un DatabaseUserDetail");
+                    response.sendRedirect("/login?error=principal");
                 }
             }
-        };
-    }
+        }
+    };
+}
+
 }
