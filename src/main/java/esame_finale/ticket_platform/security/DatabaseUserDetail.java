@@ -12,7 +12,9 @@ import esame_finale.ticket_platform.model.Operatore;
 import esame_finale.ticket_platform.model.Ruolo;
 
 public class DatabaseUserDetail implements UserDetails{
-     private String username;
+    private Integer id;
+
+    private String username;
 
     private String password;
 
@@ -26,6 +28,10 @@ public class DatabaseUserDetail implements UserDetails{
             SimpleGrantedAuthority sGA = new SimpleGrantedAuthority(ruoli.getNome());
             this.authorities.add(sGA);
         }
+    }
+
+    public Integer getId(){
+        return id;
     }
 
     @Override

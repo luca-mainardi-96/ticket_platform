@@ -8,13 +8,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 
@@ -29,7 +25,6 @@ public class Ticket {
     @NotBlank(message="campo obbligatorio")
     private String titolo;
 
-    @FutureOrPresent(message="data precedente a oggi non valida")
     @PastOrPresent(message="data successiva a oggi non valida")
     @NotNull(message="seleziona una data d'inizio")
     private LocalDate dataInizio;
@@ -45,12 +40,11 @@ public class Ticket {
     @NotNull(message="seleziona un operatore")
     private Operatore operatore;
 
-    @ManyToMany
-    @JoinTable(name = "ticket_categorie", 
-            joinColumns = @JoinColumn(name = "ticket_id"), 
-            inverseJoinColumns = @JoinColumn(name = "categorie_id"))
-    @NotEmpty(message="seleziona almeno una categoria")
-    private List<Categoria> categorie;
+    @ManyToOne
+    @JoinColumn(name = "categoria_id")
+    @NotNull(message = "seleziona una categoria")
+    private Categoria categoria;
+
 
     public Integer getId() {
         return id;
@@ -92,20 +86,20 @@ public class Ticket {
         this.titolo = titolo;
     }
 
-    public List<Categoria> getCategorie() {
-        return categorie;
-    }
-
-    public void setCategorie(List<Categoria> categorie) {
-        this.categorie = categorie;
-    }
-
     public List<Nota> getNote() {
         return note;
     }
 
     public void setNote(List<Nota> note) {
         this.note = note;
+    }
+
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
     }
 
     

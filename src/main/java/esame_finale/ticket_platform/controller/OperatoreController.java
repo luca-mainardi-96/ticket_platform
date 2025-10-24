@@ -34,38 +34,71 @@ public class OperatoreController {
     private OperatoreRepository opRepo;
 
     @GetMapping("/")
-    public String show(Model model){
+    public String show(Model model) {
         List<Operatore> result = opRepo.findAll();
-        for(Operatore op : result){
-            if(!op.getTicket().isEmpty()){
-                op.setStatoOperatore(false);
+
+        for (Operatore op : result) {
+            List<Ticket> tickets = op.getTicket();
+
+            if (tickets.isEmpty()) {
+                op.setStatoOperatore(true);
+            } else {
+                boolean tuttiCompletati = true;
+
+                for (Ticket tic : tickets) {
+                    if (!"completato".equalsIgnoreCase(tic.getStatoLavori())) {
+                        tuttiCompletati = false;
+                        break;
+                    }
+                }
+
+                op.setStatoOperatore(tuttiCompletati);
             }
+
+            opRepo.save(op);
         }
+
         model.addAttribute("lista", result);
         return "operatori/operatori";
     }
 
+
     @GetMapping("/dettaglio/{id}")
-    public String show(@PathVariable(name = "id") Integer id, Model model){
-        List<Ticket> tickets = opRepo.findById(id).get().getTicket();
+    public String show(@PathVariable(name = "id") Integer id, Model model) {
         Optional<Operatore> optOp = opRepo.findById(id);
-        
-        if(!tickets.isEmpty()){
-            optOp.get().setStatoOperatore(false);
-        } else {
-            optOp.get().setStatoOperatore(true);
+
+        if (optOp.isEmpty()) {
+            model.addAttribute("empty", true);
+            return "operatori/dettaglio";
         }
 
-        if(optOp.isPresent()){
-            model.addAttribute("operatore", optOp.get());
-            model.addAttribute("listaTicket", tickets);
-            model.addAttribute("empty", false);
+        Operatore op = optOp.get();
+        List<Ticket> tickets = op.getTicket();
+
+        if (tickets.isEmpty()) {
+            op.setStatoOperatore(true);
         } else {
-            model.addAttribute("empty", true);
+            boolean tuttiCompletati = true;
+
+            for (Ticket tic : tickets) {
+                if (!"completato".equalsIgnoreCase(tic.getStatoLavori())) {
+                    tuttiCompletati = false;
+                    break;
+                }
+            }
+
+            op.setStatoOperatore(tuttiCompletati);
         }
+
+        opRepo.save(op);
+
+        model.addAttribute("operatore", op);
+        model.addAttribute("listaTicket", tickets);
+        model.addAttribute("empty", false);
 
         return "operatori/dettaglio";
     }
+
 
     @GetMapping("/edit")
     public String edit(Model model){

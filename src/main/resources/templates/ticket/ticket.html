@@ -12,31 +12,70 @@
 
     <div class="container">
         <div class="row">
-            <div class="col-7">
+            <div class="col-12">
                 <ul>
                     <li th:text="|Titolo: ${ticket.titolo}|"></li>
                     <li th:text="|Operatore assegnato: ${ticket.operatore.username}|"></li>
                     <li th:text="|Data Creazione: ${ticket.dataInizio}|"></li>
+                    <li th:text="|Categoria ticket: ${ticket.categoria.nome}|"></li>
                     <li>
-                        <form th:action="@{/ticket/{id}(id=${ticket.id})}" method="post" th:object="${ticket}">
-                            <select th:field="*{statoLavori}" id="">
+                        <form th:action="@{/ticket/{id}(id=${ticket.id})}" 
+                            method="post" 
+                            th:object="${ticket}"
+                            >
+                            <input type="hidden" th:field="*{titolo}">
+                            <input type="hidden" th:field="*{dataInizio}">
+                            <input type="hidden" th:field="*{categoria}"/>
+                            <input type="hidden" th:field="*{operatore}">
+                            <input type="hidden" th:field="*{note}">
+                            <select th:field="*{statoLavori}" th:errorClass="is-invalid">
                                 <option value="">Aggiorna stato del ticket</option>
                                 <option value="Da fare">Da fare</option>
                                 <option value="In corso">In corso</option>
                                 <option value="Completato">Completato</option>
                             </select>
                             <button type="submit" class="btn btn-primary text-light">Conferma modifica</button>
+                            <div th:if="${#fields.hasErrors('statoLavori')}" class="text-danger">
+                                <ul class="mb-0">
+                                    <li th:each="err : ${#fields.errors('statoLavori')}" th:text="${err}"></li>
+                                </ul>
+                            </div>
                         </form>
                     </li>
                 </ul>
             </div>
-            <div class="col-5">
-                <ul>
-                    <li th:each="cat : ${categorie}" th:text="${cat.nome}"></li>
-                </ul>
-            </div>
             <div class="col-12">
-                <div th:if="${note.size() > 0}">
+                <div>
+                    <span>Aggiungi una nuova nota</span>
+                    <button class="btn btn-outline-primary btn-sm" 
+                            type="button" 
+                            data-bs-toggle="collapse" 
+                            data-bs-target="#collapseNota"
+                            aria-expanded="false" 
+                            aria-controls="collapseNota">>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                            </svg>
+                    </button>
+
+                    <div class="collapse mt-3" id="collapseNota">
+                        <div class="card card-body">
+                            <form th:action="@{/ticket/{id}/note(id=${ticket.id})}" method="post">
+                                <div class="mb-2">
+                                    <textarea name="testo" class="form-control" rows="1" placeholder="inserisci il testo della nota, massimo 255 caratteri"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-sm">Salva nota</button>
+                                <button class="btn btn-secondary btn-sm" type="button" 
+                                        data-bs-toggle="collapse" 
+                                        data-bs-target="#collapseNota">
+                                    Annulla
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div th:if="${note != null and note.size() > 0}">
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -46,31 +85,31 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="nota : ${note}">
-                                <td th:text="${note.autore}"></td>
-                                <td th:text="${note.dataCreazione}"></td>
-                                <td>
-                                    <button class="btn btn-outline-secondary btn-sm"
-                                            type="button"
-                                            data-bs-toggle="collapse"
-                                            th:attr="data-bs-target='#noteRow__${ticket.id}'"
-                                            aria-expanded="false"
-                                            th:attrappend="aria-controls='noteRow__${ticket.id}'">
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr class="collapse" th:id="'noteRow__' + ${ticket.id}">
-                                <td colspan="4">
-                                    <div class="p-3 bg-light border rounded">
-                                        <label class="form-label fw-bold">Note del ticket</label>
-                                        <textarea class="form-control" rows="3"></textarea>
-                                    </div>
-                                </td>
-                            </tr>
+                            <th:block th:each="nota : ${note}">
+                                <tr>
+                                    <td th:text="${nota.autore}"></td>
+                                    <td th:text="${nota.dataCreazione}"></td>
+                                    <td>
+                                    <td>
+                                        <button class="btn btn-primary" type="button"
+                                                data-bs-toggle="collapse" 
+                                                th:attr="data-bs-target='#nota-' + ${nota.id}" aria-expanded="false" 
+                                                aria-controls="collapseNotaTesto">
+                                            Visualizza il testo della nota
+                                        </button>
+                                    </td>
+                                </tr> 
+                                <tr>
+                                    <td class="collapse" th:id="'nota-' + ${nota.id}">
+                                        <div class="card card-body" th:text="${nota.nota}">
+                                        </div>
+                                    </td>
+                                </tr>   
+                            </th:block>
                         </tbody>
                     </table>
                 </div>
-                <div th:unless="${note.size() > 0}">
+                <div th:unless="${note != null and note.size() > 0}">
                     <div class="alert alert-primary" role="alert">
                         Non ci sono note per questo ticket
                     </div>

@@ -6,7 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
@@ -19,7 +19,7 @@ public class Categoria {
     @NotNull
     private String nome;
 
-    @ManyToMany(mappedBy = "categorie")
+    @OneToMany(mappedBy="categoria")
     private List<Ticket> ticket;
 
     public Integer getId() {
