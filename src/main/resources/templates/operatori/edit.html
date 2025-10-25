@@ -17,6 +17,8 @@
                     th:object="${operatore}"
                     method="post"
                     enctype="multipart/form-data">
+                    <input type="hidden" th:field="*{statoOperatore}">
+                    <input type="hidden" th:field="*{percorsoImg}">
            
                 <div class="col-md-6">
                     <label for="inputUsername" class="form-label">Username</label>
@@ -30,7 +32,7 @@
 
                 <div class="col-md-6">
                     <label for="inputPassword" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="inputPassword" th:field="*{password}" th:errorClass="is-invalid">
+                    <input type="text" class="form-control" id="inputPassword" th:field="*{password}" th:errorClass="is-invalid">
                     <div th:if="${#fields.hasErrors('password')}" class="invalid-feedback">
                         <ul>
                             <li th:each="err : ${#fields.errors('password')}" th:text="${err}"></li>

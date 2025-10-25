@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import esame_finale.ticket_platform.model.Operatore;
 import esame_finale.ticket_platform.model.Ticket;
 import esame_finale.ticket_platform.repository.OperatoreRepository;
+import esame_finale.ticket_platform.repository.TicketRepository;
 import jakarta.validation.Valid;
 
 @Controller
@@ -32,6 +33,9 @@ public class OperatoreController {
 
     @Autowired
     private OperatoreRepository opRepo;
+
+    @Autowired
+    private TicketRepository ticRepo;
 
     @GetMapping("/")
     public String show(Model model) {
@@ -102,7 +106,9 @@ public class OperatoreController {
 
     @GetMapping("/edit")
     public String edit(Model model){
-        model.addAttribute("operatore", new Operatore());
+        Operatore nuovoOperatore = new Operatore();
+        nuovoOperatore.setStatoOperatore(true);
+        model.addAttribute("operatore", nuovoOperatore);
         model.addAttribute("editMode", false);
         return "operatori/edit";
     }
@@ -110,7 +116,7 @@ public class OperatoreController {
     @PostMapping("/edit")
     public String create(@Valid @ModelAttribute("operatore") Operatore formOp, 
                         BindingResult bindingResult, @RequestParam(name="foto", required=false) MultipartFile file){
-        
+
         if (file != null && !file.isEmpty()) {
             try {
                 String percorsoUpload = "src/main/resources/static/img/";
@@ -147,6 +153,12 @@ public class OperatoreController {
     public String update(@Valid @ModelAttribute("operatore") Operatore formOp, 
                         BindingResult bindingResult, Model model, 
                         @RequestParam(name="foto", required=false) MultipartFile file){
+        Operatore originale = opRepo.findById(formOp.getId()).get();
+
+        if(formOp.getPassword() == null || formOp.getPassword().isBlank()){
+            formOp.setPassword(originale.getPassword());
+        }
+        
         if (file != null && !file.isEmpty()) {
             try {
                 String percorsoUpload = "src/main/resources/static/img/";
@@ -173,12 +185,16 @@ public class OperatoreController {
         }
 
         opRepo.save(formOp);
-        return "redirect:/operatore/";
+        return "redirect:/operatore/dettaglio/" + formOp.getId();
 
     }
 
     @PostMapping("delete/{id}")
     public String delete(@PathVariable("id") Integer id){
+        List<Ticket> ticket = opRepo.findById(id).get().getTicket();
+        for(Ticket tic : ticket){
+            ticRepo.delete(tic);
+        }
         opRepo.deleteById(id);
         return "redirect:/operatore/";
     }
