@@ -23,7 +23,8 @@ public class Operatore {
     @NotBlank(message="campo obbligatorio")
     private String username;
 
-    @NotNull
+    @NotNull(message="password non può essere null")
+    @NotBlank(message="campo obbligatorio")
     private String password;
 
     private String email;

@@ -124,7 +124,7 @@ public class OperatoreController {
                 bindingResult.addError(new FieldError("operatore", "percorsoImg", "Errore caricamento file"));
             }
         } else {
-            formOp.setPercorsoImg(null);
+            formOp.setPercorsoImg("scr/main/resources/static/img/defauls.png");
         }
         
         if(bindingResult.hasErrors()){
@@ -160,16 +160,20 @@ public class OperatoreController {
                 bindingResult.addError(new FieldError("operatore", "percorsoImg", "Errore caricamento file"));
             }
         } else {
-            formOp.setPercorsoImg(null);
+            formOp.setPercorsoImg("scr/main/resources/static/img/defauls.png");
         }
 
-    if(bindingResult.hasErrors()){
-        model.addAttribute("editMode", true);
-        return "operatori/edit";
-    }
+        if(!formOp.getStatoOperatore()){
+            bindingResult.addError(new FieldError("operatore", "statoOperatore", "Operatore non disponibile"));
+        }
 
-    opRepo.save(formOp);
-    return "redirect:/operatore/";
+        if(bindingResult.hasErrors()){
+            model.addAttribute("editMode", true);
+            return "operatori/edit";
+        }
+
+        opRepo.save(formOp);
+        return "redirect:/operatore/";
 
     }
 

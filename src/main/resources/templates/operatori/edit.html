@@ -49,8 +49,12 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="imputPhoto" class="form-label">Default file input example</label>
-                    <input class="form-control" type="file" name="foto" id="imputPhoto" th:classappend="is-invalid">
+                    <label for="inputPhoto" class="form-label">Inserisci la foto profilo</label>
+                    <input class="form-control" 
+                            type="file" 
+                            name="foto" 
+                            id="inputPhoto" 
+                            th:classappend="${#fields.hasErrors('percorsoImg')} ? ' is-invalid' : ''">
                     <div th:if="${#fields.hasErrors('percorsoImg')}" class="invalid-feedback">
                         <ul>
                             <li th:each="err : ${#fields.errors('percorsoImg')}" th:text="${err}"></li>
@@ -58,16 +62,13 @@
                     </div>
                 </div>
 
-                <div class="col-md-4">
-                    <label for="inputState" class="form-label">Stato operatore</label>
-                    <select id="inputState" class="form-select" th:field="*{statoOperatore}">
-                    <option selected value="true">Disponibile</option>
-                    <option value="false">Occupato</option>
-                    </select>
-                </div>
-
                 <div class="col-12">
                     <button type="submit" class="btn btn-primary">Salva dati</button>
+                    <button th:if="!editMode" class="btn btn-danger">
+                        <a th:href="@{/operatore/dettaglio/{id}(id=${operatore.id})}" class="text-light">
+                            Ritorna ai dettagli
+                        </a>
+                    </button>
                 </div>
             </form>
         </div>
