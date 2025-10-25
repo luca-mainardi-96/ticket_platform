@@ -2,6 +2,8 @@ package esame_finale.ticket_platform.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -35,6 +37,7 @@ public class Operatore {
     private Boolean statoOperatore;
 
     @OneToMany(mappedBy = "operatore")
+    @JsonManagedReference
     private List<Ticket> ticket;
 
     @ManyToMany(fetch = FetchType.EAGER)

@@ -26,7 +26,8 @@ public class SecurityConfiguration {
         .requestMatchers("/ticket").hasAnyAuthority("ADMIN")
         .requestMatchers("/operatore/**").hasAnyAuthority("ADMIN", "OPERATORE")
         .requestMatchers("/**").permitAll()
-        .and().formLogin().successHandler(customSuccessHandler()).and().logout();
+        .and().formLogin().successHandler(customSuccessHandler()).and().logout()
+        .and().csrf().disable();
 
         return http.build();
     }

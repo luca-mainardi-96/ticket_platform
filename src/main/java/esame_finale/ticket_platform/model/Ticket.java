@@ -3,6 +3,9 @@ package esame_finale.ticket_platform.model;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,16 +36,19 @@ public class Ticket {
     private String statoLavori;
 
     @OneToMany(mappedBy="ticket")
+    @JsonManagedReference
     private List<Nota> note;
 
     @ManyToOne
     @JoinColumn(name = "operatore_id")
     @NotNull(message="seleziona un operatore")
+    @JsonBackReference
     private Operatore operatore;
 
     @ManyToOne
     @JoinColumn(name = "categoria_id")
     @NotNull(message = "seleziona una categoria")
+    @JsonManagedReference
     private Categoria categoria;
 
 
